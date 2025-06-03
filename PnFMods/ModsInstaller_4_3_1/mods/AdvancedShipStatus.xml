@@ -23,5 +23,5 @@
 			</find_Node>
 		</root_Node>
 	</target_File>
-	<check name="AdvancedShipStatus" version="1.1.0"/>
+	<check name="AdvancedShipStatusPanel" version="1.2.0"/>
 </code>
