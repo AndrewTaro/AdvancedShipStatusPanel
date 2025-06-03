@@ -1,0 +1,27 @@
+<code>
+	<target_File file="gui/battle_elements.xml">
+		<root_Node>
+			<find_Node tag="elementList">
+				<insert>
+					<element class="lesta.unbound2.UbElement" elementName="AdvSS_SpeedControl" name="unbound2AdvSS_SpeedControl">
+						<properties hitTest="true"/>
+					</element>
+					<attrs>
+						<do_if_not_exist tag="element" type="name" name="unbound2AdvSS_SpeedControl"/>
+						<position insert="after_node" tag="element" attr_1="elementName" value_1="SpeedControl"/>
+					</attrs>
+				</insert>
+				<insert>
+					<element class="lesta.unbound2.UbElement" elementName="AdvSS_CompassContainer" name="unbound2AdvSS_CompassContainer">
+						<properties hitTest="true"/>
+					</element>
+					<attrs>
+						<do_if_not_exist tag="element" type="name" name="unbound2AdvSS_CompassContainer"/>
+						<position insert="after_node" tag="element" attr_1="elementName" value_1="CompassContainer"/>
+					</attrs>
+				</insert>
+			</find_Node>
+		</root_Node>
+	</target_File>
+	<check name="AdvancedShipStatus" version="1.1.0"/>
+</code>
