@@ -846,6 +846,7 @@
 		(var defaultPos:dict = "{'positionX': 20, 'positionY': stageHeight - 20}")
 		(macro DRAGGABLE_GET_DROP_POSITION _elementName="AdvSS_COMPASS_ELEMENT_NAME" _defaultPosition="defaultPos")
 
+		(macro TT_GET_PREF_BOOL		_varName="'isCompassRoseVisible'"		_pref="AdvSS_PREFS.COMPASS.COMPASS_ROSE")
 		(macro TT_GET_PREF_NUMBER	_varName="'compassScale'"				_pref="AdvSS_PREFS.COMPASS.SCALE")
 		#
 
@@ -886,7 +887,11 @@
 			(bind scaleY "compassScale")
 		)
 
-		(element Compass)
+		# Mod
+		(element Compass
+			(bind visible "isCompassRoseVisible")
+		)
+		#
 
 		(controller $Instance renderer='ShipDollAirDefenseSectors'
 			(bind enabled "hasAA || !isAlive")
