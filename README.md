@@ -1,4 +1,4 @@
-# TTaro Chat
+# Advanced Ship Status Panel
 This mod enables the customization of the ship status panel at the bottom left corner.
 ![image](https://github.com/user-attachments/assets/b7e1efcb-3d21-412d-a120-a0db29521c9d)
 
