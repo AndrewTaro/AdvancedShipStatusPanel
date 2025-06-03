@@ -1,0 +1,232 @@
+(def constant TT_ADVSHIPSTATUS_INSTALLED true) # For modconfig
+(def constant AdvSS_HP_BAR_ELEMENT_NAME 'AdvSSHealthBar')
+(def constant AdvSS_TELEGRAPH_ELEMENT_NAME 'AdvSSTelegraph')
+
+(def element OwnShipHealthContainer(__entityId:number, __isSelfObserved:bool, __shipInfo:gfx) layout=true
+	(scope
+		(var entityId:number = "__entityId")
+		(var isSelfObserved:bool = "__isSelfObserved")
+		(var entity:gfx = "$datahub.getEntity(entityId)")
+		(var healthComponent:gfx = "entity.health")
+		(var isAlive:bool = "healthComponent != null ? healthComponent.isAlive : false" (event "healthComponent.evIsAliveChanged"))
+		(var shipInfo:gfx = "__shipInfo")
+
+		(var hasShield:bool = "entity.hasComponent(CC.shield)")
+
+        # Mod
+        (macro TT_GET_USERPREF)
+		(macro TT_GET_PREF_BOOL		_varName="'isPositionLocked'"		_pref="AdvSS_PREFS.HP_BAR.DISABLE_DRAGDROP")
+
+        (macro STAGE_SIZE)
+		(var defaultPos:dict = "{'positionX': 11, 'positionY': stageHeight - 224}")
+		(macro DRAGGABLE_GET_DROP_POSITION _elementName="AdvSS_HP_BAR_ELEMENT_NAME" _defaultPosition="defaultPos")
+
+		(macro TT_GET_PREF_NUMBER	_varName="'barScale'"				_pref="AdvSS_PREFS.HP_BAR.SCALE")
+        #
+	)
+	
+	(style
+		(position = "absolute")
+        # Mod
+		# (bottom = "224")
+		# (left = "11")
+        (bind left "dragPosX")
+        (bind top "dragPosY")
+		(pivotY = 100%)
+        #
+	)
+
+    # Mod
+    (controller $Instance renderer='ModDraggableElement'
+        (bind enabled "!isPositionLocked")
+        (args
+            _elementName="AdvSS_HP_BAR_ELEMENT_NAME"
+            _defaultPosition="defaultPos"
+            _screenBoundsOffset="{top:11, left:11, right: 11, bottom: 11}"
+        )
+    )
+    #
+	
+	(block
+		# Mod
+		(style
+			(width = 220px) # 
+			(bind scaleX "barScale")
+			(bind scaleY "barScale")
+		)
+		#
+		(hblock
+			(style
+				(width = 100%)
+				(align = "center")
+				# Mod
+				(hitTest = false)
+				#
+			)
+			
+			(element HotkeyIndicator _commandId="Cmd.CMD_SHIP_PARAMS" _fxOnDown=true
+				(style
+					(position = "absolute")
+					(top = 0px)
+					(left = -2px)
+				)
+				(bind visible "isSelfObserved && isAlive")
+			)
+
+			
+			(block
+				(controller $Instance renderer='OwnHealthBar'
+					(args _entityId="entityId" _shipInfo="shipInfo")
+					(bindcall recreate (bind trigger "entityId"))
+				)
+			)
+			(block
+				(style
+					(position = "absolute")
+					(width = 100%)
+					
+					(align = "center")
+					
+				)
+				(controller $Instance renderer='OwnShieldBar'
+					(bind enabled "entity.shield != null")
+					(args _entityId="entityId" _shipInfo="shipInfo")
+					(bindcall recreate (bind trigger "entityId"))
+				)
+			)
+			
+			
+
+		)
+
+		(hblock
+			(style
+				(marginLeft = -2px)
+				(align = "middle")
+				# Mod
+				(hitTest = false)
+				#
+			)
+			(element ShipLabel _shipInfoEntity="shipInfo"
+				(style (minWidth = 135))
+			)
+			(block
+				(style
+					(align = "right")
+					(bind marginBottom "hasShield ? -8 : 0")
+				)
+				(block
+					(controller $Instance renderer='ShipShieldLabel'
+						(bind enabled "hasShield")
+						(args _shipEntity="entity")
+						(exprs
+							(style
+								(marginTop = -4)
+								(marginBottom = -4)
+							)
+						)
+					)
+				)
+				(element ShipHealthLabel _shipEntity="entity")
+				
+			)
+		)
+	)
+)
+
+(def element SpeedControl () layout=true dispatch_size_change=true)
+
+(def element AdvSS_SpeedControl() layout=true
+	(scope
+		# Mod
+		(macro TT_GET_USERPREF)
+		(macro TT_GET_PREF_BOOL		_varName="'isPositionLocked'"		_pref="AdvSS_PREFS.TELEGRAPH.DISABLE_DRAGDROP")
+		(macro TT_GET_PREF_BOOL		_varName="'isEnabledOnPlane'"		_pref="AdvSS_PREFS.TELEGRAPH.ENABLE_ON_PLANE")
+
+        (macro STAGE_SIZE)
+		(var defaultPos:dict = "{'positionX': 245, 'positionY': stageHeight - 51}")
+		(macro DRAGGABLE_GET_DROP_POSITION _elementName="AdvSS_TELEGRAPH_ELEMENT_NAME" _defaultPosition="defaultPos")
+
+		(macro TT_GET_PREF_NUMBER	_varName="'controlScale'"				_pref="AdvSS_PREFS.TELEGRAPH.SCALE")
+		#
+
+		(var avatarEntity:gfx = "$datahub.getSingleEntity(CC.playerAvatar)")
+		(var healthComponent:gfx = "avatarEntity.health")
+		(var isAlive:bool = "healthComponent ? healthComponent.isAlive : false" (event "healthComponent.evIsAliveChanged"))
+
+		(var ownCarrierEntity:gfx = "$datahub.getSingleEntity(CC.aircarrier)")
+		(var aircarrier:gfx = "ownCarrierEntity.aircarrier")
+		(var activeSquadron:number = "aircarrier.activeSquadron" (event "aircarrier.evStateChanged"))
+		(var squadronCameraMode:str = "aircarrier.squadronCameraMode" (event "aircarrier.evSquadronCameraModeChanged"))
+
+		# Mod
+		(var isPlaneModeValid:bool = "isEnabledOnPlane || ((aircarrier == null) || (activeSquadron == -1) && (squadronCameraMode == SquadronCameraModes.DEFAULT))")
+		#
+
+		(var isEnabled:bool = "isAlive && isPlaneModeValid")
+
+		(var t:gfx = "null")
+	)
+
+	(style
+		(bind width "stageWidth")
+		(bind height "stageHeight")
+	)
+
+	(block
+		(style
+			(position = "absolute")
+			(bind left "dragPosX")
+			(bind top "dragPosY")
+			(pivotY = 100%)
+		)
+
+		# Draggable
+		(controller $Instance renderer='ModDraggableElement'
+			(bind enabled "!isPositionLocked")
+			(args
+				_elementName="AdvSS_TELEGRAPH_ELEMENT_NAME"
+				_defaultPosition="defaultPos"
+			)
+		)
+
+		# Main	
+		(element SpeedControlContent
+			(bind alpha "isEnabled")
+			(style
+				(hitTest = false)
+				(bind scaleX "controlScale")
+				(bind scaleY "controlScale")
+			)
+		)
+	)
+)
+
+(def element AngleControl () dispatch_size_change=true
+	(scope
+		# Mod
+		(macro TT_GET_USERPREF)
+		(macro TT_GET_PREF_BOOL		_varName="'isEnabledOnPlane'"		_pref="AdvSS_PREFS.TELEGRAPH.ENABLE_ON_PLANE")
+		#
+		(var avatarEntity:gfx = "$datahub.getSingleEntity(CC.playerAvatar)")
+		(var healthComponent:gfx = "avatarEntity.health")
+		(var isAlive:bool = "healthComponent ? healthComponent.isAlive : false" (event "healthComponent.evIsAliveChanged"))
+
+		(var ownCarrierEntity:gfx = "$datahub.getSingleEntity(CC.aircarrier)")
+		(var aircarrier:gfx = "ownCarrierEntity.aircarrier")
+		(var activeSquadron:number = "aircarrier.activeSquadron" (event "aircarrier.evStateChanged"))
+		(var squadronCameraMode:str = "aircarrier.squadronCameraMode" (event "aircarrier.evSquadronCameraModeChanged"))
+
+		# Mod
+		(var isPlaneModeValid:bool = "isEnabledOnPlane || ((aircarrier == null) || (activeSquadron == -1) && (squadronCameraMode == SquadronCameraModes.DEFAULT))")
+		#
+
+		(var isEnabled:bool = "isAlive && isPlaneModeValid")
+	)
+
+	(bind alpha "isEnabled ? 1 : 0")
+
+	(element AngleControlContent
+		
+	)
+)
