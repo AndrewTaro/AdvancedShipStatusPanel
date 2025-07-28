@@ -18,8 +18,6 @@
 		(var isAlive:bool = "healthComponent != null ? healthComponent.isAlive : false" (event "healthComponent.evIsAliveChanged"))
 		(var shipInfo:gfx = "__shipInfo")
 
-		(var hasShield:bool = "entity.hasComponent(CC.shield)")
-
         # Mod
         (macro TT_GET_USERPREF)
 		(macro TT_GET_PREF_BOOL		_varName="'isPositionLocked'"		_pref="AdvSS_PREFS.HP_BAR.DISABLE_DRAGDROP")
@@ -33,7 +31,6 @@
 
 		(var useShipContour:bool = "barType == AdvSS_BAR_TYPES.SHIP_ICON")
 		(var healthRenderer:str = "useShipContour ? 'AdvSS_OwnHealthBar' : 'AdvSS_OwnHealthSimpleBar'")
-		(var shieldRenderer:str = "useShipContour ? 'AdvSS_OwnShieldBar' : 'AdvSS_OwnShieldSimpleBar'")
         #
 	)
 	
@@ -94,26 +91,6 @@
 					(bindcall recreate (bind trigger "entityId"))
 				)
 			)
-			(block
-				(style
-					(position = "absolute")
-					(width = 100%)
-					
-					(align = "center")
-					
-				)
-				(controller $Instance
-					# Mod
-					(bind renderer "shieldRenderer")
-					#
-					(bind enabled "entity.shield != null")
-					(args _entityId="entityId" _shipInfo="shipInfo")
-					(bindcall recreate (bind trigger "entityId"))
-				)
-			)
-			
-			
-
 		)
 
 		(hblock
@@ -127,134 +104,9 @@
 			(block
 				(style
 					(align = "right")
-					(bind marginBottom "hasShield ? -8 : 0")
-				)
-				(block
-					(controller $Instance renderer='ShipShieldLabel'
-						(bind enabled "hasShield")
-						(args _shipEntity="entity")
-						(exprs
-							(style
-								(marginTop = -4)
-								(marginBottom = -4)
-							)
-						)
-					)
 				)
 				(element ShipHealthLabel _shipEntity="entity")
-				
 			)
-		)
-	)
-)
-
-# Ship Contour
-(def element AdvSS_OwnShieldBar (_shipInfo:gfx, _entityId:number = 0) layout=true
-	(name = 'vehicle_shield_bar')
-	(scope
-		(var entityId:number = "_entityId")
-		(var entity:gfx = "$datahub.getEntity(entityId)")
-		(var shortName:str = "_shipInfo.ship.shortName")
-		
-		(var shieldComponent:gfx = "entity.shield")
-		(var maxHealth:number = "shieldComponent.maxHP" (event "shieldComponent.evMaxHPChanged"))
-		(var healthValue:number = "shieldComponent.remainingHP" (event "shieldComponent.evRemainingHPChanged"))
-		(var healthPercent:number = "maxHealth ? healthValue / maxHealth : -1")
-
-		(var resultWidth:number = "100% * healthPercent")
-
-		
-		(event evBarTweenStart)
-		(event onBarTweenStart)
-		(event onBarTweenEnd)
-		(event onDamageTweenEnd)
-
-		(var isDirty:bool = false) 
-		(bind isDirty "true" (event "shieldComponent.evRemainingHPChanged") (event "shieldComponent.evMaxHPChanged"))
-		(bind isDirty "false" (event "onBarTweenStart"))
-		
-		(var isDamageShows:bool = false) 
-		(bind isDamageShows "true" (event "onBarTweenStart"))
-		(bind isDamageShows "false" (event "onDamageTweenEnd"))
-
-		(var targetBarScale:number = 0) 
-		(bind targetBarScale "resultWidth" watch=false (event "onBarTweenStart"))
-	)
-	
-	(dispatch evBarTweenStart args="{}" (event "onDamageTweenEnd") (bind enabled "isDirty")) 
-	(style 
-		(width = "BAR_IMAGE_WIDTH")
-		(height = "BAR_IMAGE_HEIGHT")
-		(align="center|middle")
-		(backgroundImage = 'img://gui/battle_hud/own_ship_health/shield_track.png')
-	)
-
-	
-	(block
-		(style 
-			(width = 100%)
-			(height = 100%)
-			(align="center|middle")
-			(position = "absolute")
-		)
-		(block
-			(style
-				(backgroundSize = "autosize")
-				(backgroundImage = 'img://gui/battle_hud/own_ship_health/shield_damage.png')
-				(align="center|middle")
-			)
-		)
-		(block
-			(controller $Animation
-				(bindcall play  duration = "DAMAGE_BAR_TWEEN_DURATION"
-								delay = "DAMAGE_BAR_TWEEN_DELAY"
-								action="killAll"
-								watch=false
-								easing="Easing.quad_in"
-								to = "{ width: targetBarScale }"
-								(event "onBarTweenEnd")
-				)
-				(dispatch onDamageTweenEnd args="{}" on=evAnimEnded)
-			)
-			(class $FullsizeAbsolute)
-			(style (backgroundColor = 0xFF000000))
-			(isMask = true)
-		)
-	)
-
-	
-	(block
-		(style 
-			(width = 100%)
-			(height = 100%)
-			(align="center|middle")
-			(position = "absolute")
-		)
-		(block
-			(style
-				(backgroundSize = "autosize")
-				(backgroundImage = 'img://gui/battle_hud/own_ship_health/shield_bar.png')
-				(align="center|middle")
-			)
-		)
-		
-		(block
-			(controller $Animation
-				(bind enabled "!(isDamageShows)")
-				(bindcall play	duration = "HEALTH_BAR_TWEEN_DURATION"
-								action="killAll"
-								watch=false
-								to = "{ width: resultWidth }"
-								(event "shieldComponent.evRemainingHPChanged")
-								(event "shieldComponent.evMaxHPChanged")
-								(event "evBarTweenStart")
-				)
-				(dispatch onBarTweenStart args="{}" on=evAnimStarted)
-				(dispatch onBarTweenEnd args="{}" on=evAnimEnded)
-			)
-			(class $FullsizeAbsolute)
-			(style (backgroundColor = 0x11000000))
-			(isMask = true)
 		)
 	)
 )
@@ -433,117 +285,6 @@
 	)
 
 	(bind colorTransform "healthPercent > 0.8 ? SHIP_HP_TRANSFORM_COLORS.GREEN : healthPercent > 0.3 ? SHIP_HP_TRANSFORM_COLORS.YELLOW : SHIP_HP_TRANSFORM_COLORS.RED")
-)
-
-# Simple Bar
-(def element AdvSS_OwnShieldSimpleBar (_shipInfo:gfx, _entityId:number = 0) layout=true
-	(name = 'vehicle_shield_bar')
-	(scope
-		(var entityId:number = "_entityId")
-		(var entity:gfx = "$datahub.getEntity(entityId)")
-		(var shortName:str = "_shipInfo.ship.shortName")
-		
-		(var shieldComponent:gfx = "entity.shield")
-		(var maxHealth:number = "shieldComponent.maxHP" (event "shieldComponent.evMaxHPChanged"))
-		(var healthValue:number = "shieldComponent.remainingHP" (event "shieldComponent.evRemainingHPChanged"))
-		(var healthPercent:number = "maxHealth ? healthValue / maxHealth : -1")
-
-		(var resultWidth:number = "100% * healthPercent")
-
-		
-		(event evBarTweenStart)
-		(event onBarTweenStart)
-		(event onBarTweenEnd)
-		(event onDamageTweenEnd)
-
-		(var isDirty:bool = false) 
-		(bind isDirty "true" (event "shieldComponent.evRemainingHPChanged") (event "shieldComponent.evMaxHPChanged"))
-		(bind isDirty "false" (event "onBarTweenStart"))
-		
-		(var isDamageShows:bool = false) 
-		(bind isDamageShows "true" (event "onBarTweenStart"))
-		(bind isDamageShows "false" (event "onDamageTweenEnd"))
-
-		(var targetBarScale:number = 0) 
-		(bind targetBarScale "resultWidth" watch=false (event "onBarTweenStart"))
-	)
-	
-	(dispatch evBarTweenStart args="{}" (event "onDamageTweenEnd") (bind enabled "isDirty")) 
-	(style 
-		(width = "BAR_IMAGE_WIDTH")
-		(height = "BAR_IMAGE_HEIGHT")
-		(align="center|middle")
-		(backgroundImage = 'img://gui/battle_hud/own_ship_health/shield_track.png')
-	)
-
-	
-	(block
-		(style 
-			(width = 100%)
-			(height = 100%)
-			(align="center|middle")
-			(position = "absolute")
-		)
-		(block
-			(style
-				(backgroundSize = "autosize")
-				(backgroundImage = 'img://gui/battle_hud/own_ship_health/shield_damage.png')
-				(align="center|middle")
-			)
-		)
-		(block
-			(controller $Animation
-				(bindcall play  duration = "DAMAGE_BAR_TWEEN_DURATION"
-								delay = "DAMAGE_BAR_TWEEN_DELAY"
-								action="killAll"
-								watch=false
-								easing="Easing.quad_in"
-								to = "{ width: targetBarScale }"
-								(event "onBarTweenEnd")
-				)
-				(dispatch onDamageTweenEnd args="{}" on=evAnimEnded)
-			)
-			(class $FullsizeAbsolute)
-			(style (backgroundColor = 0xFF000000))
-			(isMask = true)
-		)
-	)
-
-	
-	(block
-		(style 
-			(width = 100%)
-			(height = 100%)
-			(align="center|middle")
-			(position = "absolute")
-		)
-		(block
-			(style
-				(backgroundSize = "autosize")
-				(backgroundImage = 'img://gui/battle_hud/own_ship_health/shield_bar.png')
-				(align="center|middle")
-			)
-		)
-		
-		(block
-			(controller $Animation
-				(bind enabled "!(isDamageShows)")
-				(bindcall play	duration = "HEALTH_BAR_TWEEN_DURATION"
-								action="killAll"
-								watch=false
-								to = "{ width: resultWidth }"
-								(event "shieldComponent.evRemainingHPChanged")
-								(event "shieldComponent.evMaxHPChanged")
-								(event "evBarTweenStart")
-				)
-				(dispatch onBarTweenStart args="{}" on=evAnimStarted)
-				(dispatch onBarTweenEnd args="{}" on=evAnimEnded)
-			)
-			(class $FullsizeAbsolute)
-			(style (backgroundColor = 0x11000000))
-			(isMask = true)
-		)
-	)
 )
 
 (def element AdvSS_OwnHealthSimpleBar (_shipInfo:gfx, _entityId:number = 0) layout=true
