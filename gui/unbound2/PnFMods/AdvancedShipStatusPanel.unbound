@@ -560,9 +560,12 @@
 		(var cameraComponent:gfx = "$datahub.getSingleComponent(CC.camera)")
 		(var observedAvatarId:number = "cameraComponent ? cameraComponent.observedPlayerId : INVALID_OBSERVED_AVATAR_ID" (event "cameraComponent.evObservedPlayerIdChanged"))
 
-		(var playerAvatarComponent:gfx = "selfAvatarEntity.avatar")
+		(var playerAvatarComponent:gfx = "selfAvatarEntity ? selfAvatarEntity.avatar : null")
 		(var playerAvatarId:number = "playerAvatarComponent ? playerAvatarComponent.id : INVALID_PLAYER_AVATAR_ID")
 		(var isSelfObserved:bool = "playerAvatarId == observedAvatarId")
+
+		(var timeToRespawn:number = "playerAvatarComponent ? playerAvatarComponent.timeToRespawn : 0" (event "playerAvatarComponent.evTimeToRespawnChanged"))
+		(var isRespawning:bool = "timeToRespawn != 0 && cameraComponent.mode == SC.Battle.CAMERA_MODE.RESPAWN_MAP" (event "cameraComponent.evModeChanged"))
 	)
 	(style
 		(position = "absolute")
@@ -573,7 +576,7 @@
 	)	
 
 	(controller $Instance renderer='AdvSS_CompassContainerInstance'
-		(bind enabled "isAlive || isPreSpectator || isSelfObserved")
+		(bind enabled "!isRespawning && (isAlive || isPreSpectator || isSelfObserved)")
 	)
 )
 
