@@ -1,8 +1,3 @@
-(def constant TT_ADVSHIPSTATUS_INSTALLED true) # For modconfig
-(def constant AdvSS_HP_BAR_ELEMENT_NAME 'AdvSSHealthBar')
-(def constant AdvSS_TELEGRAPH_ELEMENT_NAME 'AdvSSTelegraph')
-(def constant AdvSS_COMPASS_ELEMENT_NAME 'AdvSSCompass')
-
 (def constant AdvSS_BAR_TYPES {
 	SHIP_ICON	: 0,
 	SIMPLE_BAR	: 1,
@@ -19,44 +14,52 @@
 		(var shipInfo:gfx = "__shipInfo")
 
         # Mod
-        (macro TT_GET_USERPREF)
-		(macro TT_GET_PREF_BOOL		_varName="'isPositionLocked'"		_pref="AdvSS_PREFS.HP_BAR.DISABLE_DRAGDROP")
+		(macro TT_GET_PREF _varName="'dragLockPref'" _key="'advSS.hpBar.disableDragdrop'")
+		(var isPositionLocked:bool = "null != dragLockPref && null != dragLockPref.value ? dragLockPref.value : true")
 
-        (macro STAGE_SIZE)
-		(var defaultPos:dict = "{'positionX': 11, 'positionY': stageHeight - 224}")
-		(macro DRAGGABLE_GET_DROP_POSITION _elementName="AdvSS_HP_BAR_ELEMENT_NAME" _defaultPosition="defaultPos")
+		# Python owns the position value, its resKey bucket AND the first-placement default; the
+		# schema's left 11 / bottom 224 is the legacy default verbatim, and the pivot below was
+		# already bottom, so nothing moves for an existing user.
+		(macro TT_DRAGGABLE_POSITION _fullKey="'advSS.hpBar.position'")
 
-		(macro TT_GET_PREF_NUMBER	_varName="'barScale'"				_pref="AdvSS_PREFS.HP_BAR.SCALE")
-		(macro TT_GET_PREF_NUMBER	_varName="'barType'"				_pref="AdvSS_PREFS.HP_BAR.TYPE")
+		(macro TT_GET_PREF _varName="'barScalePref'" _key="'advSS.hpBar.scale'")
+		(var barScale:number = "null != barScalePref && null != barScalePref.value ? barScalePref.value : 1")
+		(macro TT_GET_PREF _varName="'barTypePref'" _key="'advSS.hpBar.type'")
+		(var barType:number = "null != barTypePref && null != barTypePref.value ? barTypePref.value : AdvSS_BAR_TYPES.SHIP_ICON")
 
 		(var useShipContour:bool = "barType == AdvSS_BAR_TYPES.SHIP_ICON")
 		(var healthRenderer:str = "useShipContour ? 'AdvSS_OwnHealthBar' : 'AdvSS_OwnHealthSimpleBar'")
         #
 	)
-	
+
 	(style
 		(position = "absolute")
         # Mod
 		# (width = 220px)
 		# (bottom = "224")
 		# (left = "11")
-        (bind left "dragPosX")
-        (bind top "dragPosY")
+        (bind left "dragX")
+        (bind top "dragY")
 		(pivotY = 100%)
         #
 	)
 
     # Mod
-    (controller $Instance renderer='ModDraggableElement'
-        (bind enabled "!isPositionLocked")
-        (args
-            _elementName="AdvSS_HP_BAR_ELEMENT_NAME"
-            _defaultPosition="defaultPos"
-            _screenBoundsOffset="{top:11, left:11, right: 11, bottom: 11}"
-        )
-    )
+	# Full-size drag surface, coextensive with the positioned element (reportGeometry describes the
+	# block TT_DRAGGABLE sits in).  Declared before the content so the injected signifier stays behind
+	# it.  The legacy _screenBoundsOffset {11,11,11,11} is gone: the framework takes no consumer bounds
+	# margin, and Python's own clamp keeps the bar on screen (open item #7).
+	(block
+		(class $FullsizeAbsolute)
+		# hitTest is a STYLE property when BOUND -- directly under a (block ...) it throws at build time.
+		(style
+			(backgroundColor = 0x00FFFFFF)
+			(bind hitTest "!isPositionLocked")
+		)
+		(macro TT_DRAGGABLE _fullKey="'advSS.hpBar.position'" _isDragEnabled="!isPositionLocked")
+	)
     #
-	
+
 	(block
 		# Mod
 		(style
@@ -453,15 +456,16 @@
 (def element AdvSS_SpeedControl() layout=true
 	(scope
 		# Mod
-		(macro TT_GET_USERPREF)
-		(macro TT_GET_PREF_BOOL		_varName="'isPositionLocked'"		_pref="AdvSS_PREFS.TELEGRAPH.DISABLE_DRAGDROP")
-		(macro TT_GET_PREF_BOOL		_varName="'isEnabledOnPlane'"		_pref="AdvSS_PREFS.TELEGRAPH.ENABLE_ON_PLANE")
+		(macro TT_GET_PREF _varName="'dragLockPref'" _key="'advSS.telegraph.disableDragdrop'")
+		(var isPositionLocked:bool = "null != dragLockPref && null != dragLockPref.value ? dragLockPref.value : true")
+		(macro TT_GET_PREF _varName="'onPlanePref'" _key="'advSS.telegraph.enableOnPlane'")
+		(var isEnabledOnPlane:bool = "null != onPlanePref && null != onPlanePref.value ? onPlanePref.value : true")
 
         (macro STAGE_SIZE)
-		(var defaultPos:dict = "{'positionX': 245, 'positionY': stageHeight - 51}")
-		(macro DRAGGABLE_GET_DROP_POSITION _elementName="AdvSS_TELEGRAPH_ELEMENT_NAME" _defaultPosition="defaultPos")
+		(macro TT_DRAGGABLE_POSITION _fullKey="'advSS.telegraph.position'")
 
-		(macro TT_GET_PREF_NUMBER	_varName="'controlScale'"				_pref="AdvSS_PREFS.TELEGRAPH.SCALE")
+		(macro TT_GET_PREF _varName="'controlScalePref'" _key="'advSS.telegraph.scale'")
+		(var controlScale:number = "null != controlScalePref && null != controlScalePref.value ? controlScalePref.value : 1")
 		#
 
 		(var avatarEntity:gfx = "$datahub.getSingleEntity(CC.playerAvatar)")
@@ -490,21 +494,22 @@
 	(block
 		(style
 			(position = "absolute")
-			(bind left "dragPosX")
-			(bind top "dragPosY")
+			(bind left "dragX")
+			(bind top "dragY")
 			(pivotY = 100%)
 		)
 
-		# Draggable
-		(controller $Instance renderer='ModDraggableElement'
-			(bind enabled "!isPositionLocked")
-			(args
-				_elementName="AdvSS_TELEGRAPH_ELEMENT_NAME"
-				_defaultPosition="defaultPos"
+		# Draggable -- full-size surface over this block, declared before the content
+		(block
+			(class $FullsizeAbsolute)
+			(style
+				(backgroundColor = 0x00FFFFFF)
+				(bind hitTest "!isPositionLocked")
 			)
+			(macro TT_DRAGGABLE _fullKey="'advSS.telegraph.position'" _isDragEnabled="!isPositionLocked")
 		)
 
-		# Main	
+		# Main
 		(element SpeedControlContent
 			(bind alpha "isEnabled")
 			(style
@@ -519,8 +524,8 @@
 (def element AngleControl () dispatch_size_change=true
 	(scope
 		# Mod
-		(macro TT_GET_USERPREF)
-		(macro TT_GET_PREF_BOOL		_varName="'isEnabledOnPlane'"		_pref="AdvSS_PREFS.TELEGRAPH.ENABLE_ON_PLANE")
+		(macro TT_GET_PREF _varName="'onPlanePref'" _key="'advSS.telegraph.enableOnPlane'")
+		(var isEnabledOnPlane:bool = "null != onPlanePref && null != onPlanePref.value ? onPlanePref.value : true")
 		#
 		(var avatarEntity:gfx = "$datahub.getSingleEntity(CC.playerAvatar)")
 		(var healthComponent:gfx = "avatarEntity.health")
@@ -583,15 +588,15 @@
 (def element AdvSS_CompassContainerInstance () layout=true
 	(scope
 		# Mod
-		(macro TT_GET_USERPREF)
-		(macro TT_GET_PREF_BOOL		_varName="'isPositionLocked'"		_pref="AdvSS_PREFS.COMPASS.DISABLE_DRAGDROP")
+		(macro TT_GET_PREF _varName="'dragLockPref'" _key="'advSS.compass.disableDragdrop'")
+		(var isPositionLocked:bool = "null != dragLockPref && null != dragLockPref.value ? dragLockPref.value : true")
 
-        (macro STAGE_SIZE)
-		(var defaultPos:dict = "{'positionX': 20, 'positionY': stageHeight - 20}")
-		(macro DRAGGABLE_GET_DROP_POSITION _elementName="AdvSS_COMPASS_ELEMENT_NAME" _defaultPosition="defaultPos")
+		(macro TT_DRAGGABLE_POSITION _fullKey="'advSS.compass.position'")
 
-		(macro TT_GET_PREF_BOOL		_varName="'isCompassRoseVisible'"		_pref="AdvSS_PREFS.COMPASS.COMPASS_ROSE")
-		(macro TT_GET_PREF_NUMBER	_varName="'compassScale'"				_pref="AdvSS_PREFS.COMPASS.SCALE")
+		(macro TT_GET_PREF _varName="'compassRosePref'" _key="'advSS.compass.compassRose'")
+		(var isCompassRoseVisible:bool = "null != compassRosePref && null != compassRosePref.value ? compassRosePref.value : true")
+		(macro TT_GET_PREF _varName="'compassScalePref'" _key="'advSS.compass.scale'")
+		(var compassScale:number = "null != compassScalePref && null != compassScalePref.value ? compassScalePref.value : 1")
 		#
 
 		(macro IS_ON_PLANE)
@@ -607,19 +612,20 @@
 		(position = "absolute")
 		# Mod
 		(pivotY = 100%)
-		(bind left "dragPosX")
-		(bind top "dragPosY")
+		(bind left "dragX")
+		(bind top "dragY")
 		#
 	)
 
 	# Mod
-    (controller $Instance renderer='ModDraggableElement'
-        (bind enabled "!isPositionLocked")
-        (args
-            _elementName="AdvSS_COMPASS_ELEMENT_NAME"
-            _defaultPosition="defaultPos"
-        )
-    )
+	(block
+		(class $FullsizeAbsolute)
+		(style
+			(backgroundColor = 0x00FFFFFF)
+			(bind hitTest "!isPositionLocked")
+		)
+		(macro TT_DRAGGABLE _fullKey="'advSS.compass.position'" _isDragEnabled="!isPositionLocked")
+	)
     #
 
 	(block
