@@ -643,8 +643,11 @@
 		)
 		#
 
-		(controller $Instance renderer='ShipDollAirDefenseSectors'
-			(bind enabled "hasAA || !isAlive")
+		# Renamed from ShipDollAirDefenseSectors on 13015811, same slot in vanilla
+		# compass.unbound.  The enabled expression tracks vanilla's, which also
+		# changed: `hasAA || !isAlive` drew the sectors while dead.
+		(controller $Instance renderer='ShipDollManualAA'
+			(bind enabled "hasAA && isAlive")
 		)
 
 		(element ShipDoll
