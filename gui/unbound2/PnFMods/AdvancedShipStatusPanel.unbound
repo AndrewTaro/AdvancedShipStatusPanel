@@ -14,7 +14,7 @@
 		(var shipInfo:gfx = "__shipInfo")
 
         # Mod
-		(macro TT_GET_PREF _varName="'dragLockPref'" _key="'advSS.hpBar.disableDragdrop'")
+		(macro TT_GET_PREF _varName="'dragLockPref'" _key="'advSS.hpBar.disableDragDrop'")
 		(var isPositionLocked:bool = "null != dragLockPref && null != dragLockPref.value ? dragLockPref.value : true")
 
 		# Python owns the position value, its resKey bucket AND the first-placement default; the
@@ -24,7 +24,7 @@
 
 		(macro TT_GET_PREF _varName="'barScalePref'" _key="'advSS.hpBar.scale'")
 		(var barScale:number = "null != barScalePref && null != barScalePref.value ? barScalePref.value : 1")
-		(macro TT_GET_PREF _varName="'barTypePref'" _key="'advSS.hpBar.type'")
+		(macro TT_GET_PREF _varName="'barTypePref'" _key="'advSS.hpBar.shape'")
 		(var barType:number = "null != barTypePref && null != barTypePref.value ? barTypePref.value : AdvSS_BAR_TYPES.SHIP_ICON")
 
 		(var useShipContour:bool = "barType == AdvSS_BAR_TYPES.SHIP_ICON")
@@ -456,7 +456,7 @@
 (def element AdvSS_SpeedControl() layout=true
 	(scope
 		# Mod
-		(macro TT_GET_PREF _varName="'dragLockPref'" _key="'advSS.telegraph.disableDragdrop'")
+		(macro TT_GET_PREF _varName="'dragLockPref'" _key="'advSS.telegraph.disableDragDrop'")
 		(var isPositionLocked:bool = "null != dragLockPref && null != dragLockPref.value ? dragLockPref.value : true")
 		(macro TT_GET_PREF _varName="'onPlanePref'" _key="'advSS.telegraph.enableOnPlane'")
 		(var isEnabledOnPlane:bool = "null != onPlanePref && null != onPlanePref.value ? onPlanePref.value : true")
@@ -588,12 +588,12 @@
 (def element AdvSS_CompassContainerInstance () layout=true
 	(scope
 		# Mod
-		(macro TT_GET_PREF _varName="'dragLockPref'" _key="'advSS.compass.disableDragdrop'")
+		(macro TT_GET_PREF _varName="'dragLockPref'" _key="'advSS.compass.disableDragDrop'")
 		(var isPositionLocked:bool = "null != dragLockPref && null != dragLockPref.value ? dragLockPref.value : true")
 
 		(macro TT_DRAGGABLE_POSITION _fullKey="'advSS.compass.position'")
 
-		(macro TT_GET_PREF _varName="'compassRosePref'" _key="'advSS.compass.compassRose'")
+		(macro TT_GET_PREF _varName="'compassRosePref'" _key="'advSS.compass.rose'")
 		(var isCompassRoseVisible:bool = "null != compassRosePref && null != compassRosePref.value ? compassRosePref.value : true")
 		(macro TT_GET_PREF _varName="'compassScalePref'" _key="'advSS.compass.scale'")
 		(var compassScale:number = "null != compassScalePref && null != compassScalePref.value ? compassScalePref.value : 1")
