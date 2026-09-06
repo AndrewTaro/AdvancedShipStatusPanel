@@ -1,0 +1,189 @@
+{
+  "schemaVersion": 4,
+  "id": "cmtkswux3000kv014fet64iwz",
+  "author": "ttaro",
+  "modName": "Adv Ship Status",
+  "slug": "adv-ship-status",
+  "order": 20,
+  "tree": [
+    {
+      "kind": "group",
+      "key": "cmtktamgh00fuv0d4rfu9a1gv",
+      "label": "IDS_TT_TITLE_HEALTH_BAR",
+      "collapse": "expanded",
+      "children": [
+        {
+          "kind": "setting",
+          "control": "toggle",
+          "key": "advSS.hpBar.disableDragDrop",
+          "label": "IDS_TT_DISABLE_DRAG_DROP",
+          "hint": {
+            "text": "IDS_TT_HINT_DISABLE_DRAG_DROP"
+          },
+          "default": true
+        },
+        {
+          "kind": "setting",
+          "control": "slider",
+          "key": "advSS.hpBar.scale",
+          "label": "IDS_TT_UI_SCALE",
+          "default": 1,
+          "min": 0.5,
+          "max": 1.5,
+          "step": 0.1
+        },
+        {
+          "kind": "setting",
+          "control": "dropdown",
+          "key": "advSS.hpBar.shape",
+          "label": "IDS_TT_HP_BAR_SHAPE",
+          "default": 0,
+          "options": [
+            {
+              "value": 0,
+              "phrase": "IDS_TT_SHIP_CONTOUR"
+            },
+            {
+              "value": 1,
+              "phrase": "IDS_TT_SIMPLE_BAR"
+            }
+          ],
+          "optionStyle": "CUSTOM_TEXT"
+        },
+        {
+          "kind": "setting",
+          "control": "position",
+          "key": "advSS.hpBar.position",
+          "label": "IDS_TT_DRAGDROP_RESET",
+          "hint": {
+            "text": "IDS_TT_HINT_DRAGDROP_RESET"
+          },
+          "defaultPosition": {
+            "x": {
+              "anchor": "left",
+              "offset": 11
+            },
+            "y": {
+              "anchor": "bottom",
+              "offset": 224
+            }
+          },
+          "screenBoundsOffset": {
+            "top": 11,
+            "left": 11,
+            "right": 11,
+            "bottom": 11
+          }
+        }
+      ]
+    },
+    {
+      "kind": "group",
+      "key": "cmtktam55006kv0d4smkh1tow",
+      "label": "IDS_TT_TITLE_TELEGRAPH",
+      "collapse": "expanded",
+      "children": [
+        {
+          "kind": "setting",
+          "control": "toggle",
+          "key": "advSS.telegraph.disableDragDrop",
+          "label": "IDS_TT_DISABLE_DRAG_DROP",
+          "hint": {
+            "text": "IDS_TT_HINT_DISABLE_DRAG_DROP"
+          },
+          "default": true
+        },
+        {
+          "kind": "setting",
+          "control": "slider",
+          "key": "advSS.telegraph.scale",
+          "label": "IDS_TT_UI_SCALE",
+          "default": 1,
+          "min": 0.5,
+          "max": 1.5,
+          "step": 0.1
+        },
+        {
+          "kind": "setting",
+          "control": "toggle",
+          "key": "advSS.telegraph.enableOnPlane",
+          "label": "IDS_TT_ENABLE_TELEGRAPH_ON_PLANE",
+          "default": true
+        },
+        {
+          "kind": "setting",
+          "control": "position",
+          "key": "advSS.telegraph.position",
+          "label": "IDS_TT_DRAGDROP_RESET",
+          "hint": {
+            "text": "IDS_TT_HINT_DRAGDROP_RESET"
+          },
+          "defaultPosition": {
+            "x": {
+              "anchor": "left",
+              "offset": 245
+            },
+            "y": {
+              "anchor": "bottom",
+              "offset": 51
+            }
+          }
+        }
+      ]
+    },
+    {
+      "kind": "group",
+      "key": "cmtktam6k007sv0d46ibfjcvz",
+      "label": "IDS_TT_TITLE_COMPASS",
+      "collapse": "expanded",
+      "children": [
+        {
+          "kind": "setting",
+          "control": "toggle",
+          "key": "advSS.compass.disableDragDrop",
+          "label": "IDS_TT_DISABLE_DRAG_DROP",
+          "hint": {
+            "text": "IDS_TT_HINT_DISABLE_DRAG_DROP"
+          },
+          "default": true
+        },
+        {
+          "kind": "setting",
+          "control": "slider",
+          "key": "advSS.compass.scale",
+          "label": "IDS_TT_UI_SCALE",
+          "default": 1,
+          "min": 0.5,
+          "max": 1.5,
+          "step": 0.1
+        },
+        {
+          "kind": "setting",
+          "control": "toggle",
+          "key": "advSS.compass.rose",
+          "label": "IDS_TT_COMPASS_ROSE",
+          "default": true
+        },
+        {
+          "kind": "setting",
+          "control": "position",
+          "key": "advSS.compass.position",
+          "label": "IDS_TT_DRAGDROP_RESET",
+          "hint": {
+            "text": "IDS_TT_HINT_DRAGDROP_RESET"
+          },
+          "defaultPosition": {
+            "x": {
+              "anchor": "left",
+              "offset": 20
+            },
+            "y": {
+              "anchor": "bottom",
+              "offset": 20
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

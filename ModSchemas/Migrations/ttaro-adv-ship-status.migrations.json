@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 4,
+  "opVocabularyVersion": 1,
+  "slug": "adv-ship-status",
+  "migrations": [
+    {
+      "version": 1,
+      "description": "flat keys → dotted ancestry keys; slider step index → value",
+      "ops": [
+        {
+          "op": "rename",
+          "from": "advSSCompassDisableDragDrop",
+          "to": "advSS.compass.disableDragDrop"
+        },
+        {
+          "op": "rename",
+          "from": "advSSCompassRoseVisible",
+          "to": "advSS.compass.rose"
+        },
+        {
+          "op": "rename",
+          "from": "advSSCompassScale",
+          "to": "advSS.compass.scale"
+        },
+        {
+          "op": "rename",
+          "from": "advSSHealthBarDisableDragDrop",
+          "to": "advSS.hpBar.disableDragDrop"
+        },
+        {
+          "op": "rename",
+          "from": "advSSHealthBarScale",
+          "to": "advSS.hpBar.scale"
+        },
+        {
+          "op": "rename",
+          "from": "advSSHealthBarType",
+          "to": "advSS.hpBar.shape"
+        },
+        {
+          "op": "rename",
+          "from": "advSSTelegraphDisableDragDrop",
+          "to": "advSS.telegraph.disableDragDrop"
+        },
+        {
+          "op": "rename",
+          "from": "advSSTelegraphEnableOnCv",
+          "to": "advSS.telegraph.enableOnPlane"
+        },
+        {
+          "op": "rename",
+          "from": "advSSTelegraphScale",
+          "to": "advSS.telegraph.scale"
+        },
+        {
+          "op": "transform",
+          "from": "advSS.compass.scale",
+          "to": "advSS.compass.scale",
+          "transform": "stepIndex",
+          "args": {
+            "min": 0.5,
+            "step": 0.1
+          }
+        },
+        {
+          "op": "transform",
+          "from": "advSS.hpBar.scale",
+          "to": "advSS.hpBar.scale",
+          "transform": "stepIndex",
+          "args": {
+            "min": 0.5,
+            "step": 0.1
+          }
+        },
+        {
+          "op": "transform",
+          "from": "advSS.telegraph.scale",
+          "to": "advSS.telegraph.scale",
+          "transform": "stepIndex",
+          "args": {
+            "min": 0.5,
+            "step": 0.1
+          }
+        }
+      ]
+    }
+  ],
+  "legacyPositions": [
+    {
+      "key": "advSS.compass.position",
+      "element": "AdvSSCompass"
+    },
+    {
+      "key": "advSS.hpBar.position",
+      "element": "AdvSSHealthBar"
+    },
+    {
+      "key": "advSS.telegraph.position",
+      "element": "AdvSSTelegraph"
+    }
+  ]
+}
