@@ -1,0 +1,17 @@
+<mod name="AdvancedShipStatusPanel" version="1.2.0" priority="0">
+  <requires installer="&gt;=1.0.0"/>
+
+  <!-- Unbound 2 views; the .unbound files are auto-discovered, only the battle mounts are needed.
+       Each replacement sits directly after the vanilla element it augments. -->
+  <ubMountInBattle unbound="2"
+                   rootElementId="AdvSS_SpeedControl"
+                   name="unbound2AdvSS_SpeedControl"
+                   hitTest="true"
+                   after="SpeedControl"/>
+
+  <ubMountInBattle unbound="2"
+                   rootElementId="AdvSS_CompassContainer"
+                   name="unbound2AdvSS_CompassContainer"
+                   hitTest="true"
+                   after="CompassContainer"/>
+</mod>
