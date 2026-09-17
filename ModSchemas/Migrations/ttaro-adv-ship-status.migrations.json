@@ -1,11 +1,11 @@
 {
   "schemaVersion": 4,
-  "opVocabularyVersion": 1,
+  "opVocabularyVersion": 3,
   "slug": "adv-ship-status",
   "migrations": [
     {
       "version": 1,
-      "description": "flat keys → dotted ancestry keys; slider step index → value",
+      "description": "flat keys → dotted ancestry keys; legacy values decoded and folded onto the derived keys",
       "ops": [
         {
           "op": "rename",
@@ -19,18 +19,8 @@
         },
         {
           "op": "rename",
-          "from": "advSSCompassScale",
-          "to": "advSS.compass.scale"
-        },
-        {
-          "op": "rename",
           "from": "advSSHealthBarDisableDragDrop",
           "to": "advSS.hpBar.disableDragDrop"
-        },
-        {
-          "op": "rename",
-          "from": "advSSHealthBarScale",
-          "to": "advSS.hpBar.scale"
         },
         {
           "op": "rename",
@@ -48,38 +38,78 @@
           "to": "advSS.telegraph.enableOnPlane"
         },
         {
-          "op": "rename",
-          "from": "advSSTelegraphScale",
-          "to": "advSS.telegraph.scale"
-        },
-        {
           "op": "transform",
-          "from": "advSS.compass.scale",
+          "transform": "compose",
           "to": "advSS.compass.scale",
-          "transform": "stepIndex",
-          "args": {
-            "min": 0.5,
-            "step": 0.1
+          "sources": [
+            {
+              "key": "advSSCompassScale"
+            }
+          ],
+          "value": {
+            "add": [
+              0.5,
+              {
+                "mul": [
+                  {
+                    "round": {
+                      "src": 0
+                    }
+                  },
+                  0.1
+                ]
+              }
+            ]
           }
         },
         {
           "op": "transform",
-          "from": "advSS.hpBar.scale",
+          "transform": "compose",
           "to": "advSS.hpBar.scale",
-          "transform": "stepIndex",
-          "args": {
-            "min": 0.5,
-            "step": 0.1
+          "sources": [
+            {
+              "key": "advSSHealthBarScale"
+            }
+          ],
+          "value": {
+            "add": [
+              0.5,
+              {
+                "mul": [
+                  {
+                    "round": {
+                      "src": 0
+                    }
+                  },
+                  0.1
+                ]
+              }
+            ]
           }
         },
         {
           "op": "transform",
-          "from": "advSS.telegraph.scale",
+          "transform": "compose",
           "to": "advSS.telegraph.scale",
-          "transform": "stepIndex",
-          "args": {
-            "min": 0.5,
-            "step": 0.1
+          "sources": [
+            {
+              "key": "advSSTelegraphScale"
+            }
+          ],
+          "value": {
+            "add": [
+              0.5,
+              {
+                "mul": [
+                  {
+                    "round": {
+                      "src": 0
+                    }
+                  },
+                  0.1
+                ]
+              }
+            ]
           }
         }
       ]
