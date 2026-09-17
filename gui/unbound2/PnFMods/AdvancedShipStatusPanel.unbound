@@ -643,9 +643,7 @@
 		)
 		#
 
-		# Renamed from ShipDollAirDefenseSectors on 13015811, same slot in vanilla
-		# compass.unbound.  The enabled expression tracks vanilla's, which also
-		# changed: `hasAA || !isAlive` drew the sectors while dead.
+		# Same slot as vanilla compass.unbound; `enabled` tracks vanilla's.
 		(controller $Instance renderer='ShipDollManualAA'
 			(bind enabled "hasAA && isAlive")
 		)
