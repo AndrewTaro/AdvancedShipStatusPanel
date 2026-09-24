@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 4,
+  "schemaVersion": 5,
   "id": "cmtkswux3000kv014fet64iwz",
   "author": "ttaro",
   "modName": "Adv Ship Status",
@@ -9,6 +9,7 @@
     {
       "kind": "group",
       "key": "cmtktamgh00fuv0d4rfu9a1gv",
+      "display": "section",
       "label": "IDS_TT_TITLE_HEALTH_BAR",
       "collapse": "expanded",
       "children": [
@@ -80,6 +81,7 @@
     {
       "kind": "group",
       "key": "cmtktam55006kv0d4smkh1tow",
+      "display": "section",
       "label": "IDS_TT_TITLE_TELEGRAPH",
       "collapse": "expanded",
       "children": [
@@ -134,6 +136,7 @@
     {
       "kind": "group",
       "key": "cmtktam6k007sv0d46ibfjcvz",
+      "display": "section",
       "label": "IDS_TT_TITLE_COMPASS",
       "collapse": "expanded",
       "children": [
