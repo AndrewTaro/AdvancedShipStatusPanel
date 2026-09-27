@@ -5,6 +5,7 @@
   "modName": "Adv Ship Status",
   "slug": "adv-ship-status",
   "order": 20,
+  "migrationVersion": 1,
   "tree": [
     {
       "kind": "group",
