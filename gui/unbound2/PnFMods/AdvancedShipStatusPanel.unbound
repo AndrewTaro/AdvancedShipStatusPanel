@@ -14,17 +14,17 @@
 		(var shipInfo:gfx = "__shipInfo")
 
         # Mod
-		(macro TT_GET_PREF _varName="'dragLockPref'" _key="'ttaro.advSS.hpBar.disableDragDrop'")
+		(macro TT_GET_PREF _varName="'dragLockPref'" _key="'ttaro.advShipStatus.hpBar.disableDragDrop'")
 		(var isPositionLocked:bool = "null != dragLockPref && null != dragLockPref.value ? dragLockPref.value : true")
 
 		# Python owns the position value, its resKey bucket AND the first-placement default; the
 		# schema's left 11 / bottom 224 is the legacy default verbatim, and the pivot below was
 		# already bottom, so nothing moves for an existing user.
-		(macro TT_DRAGGABLE_POSITION _fullKey="'ttaro.advSS.hpBar.position'")
+		(macro TT_DRAGGABLE_POSITION _fullKey="'ttaro.advShipStatus.hpBar.position'")
 
-		(macro TT_GET_PREF _varName="'barScalePref'" _key="'ttaro.advSS.hpBar.scale'")
+		(macro TT_GET_PREF _varName="'barScalePref'" _key="'ttaro.advShipStatus.hpBar.scale'")
 		(var barScale:number = "null != barScalePref && null != barScalePref.value ? barScalePref.value : 1")
-		(macro TT_GET_PREF _varName="'barTypePref'" _key="'ttaro.advSS.hpBar.shape'")
+		(macro TT_GET_PREF _varName="'barTypePref'" _key="'ttaro.advShipStatus.hpBar.shape'")
 		(var barType:number = "null != barTypePref && null != barTypePref.value ? barTypePref.value : AdvSS_BAR_TYPES.SHIP_ICON")
 
 		(var useShipContour:bool = "barType == AdvSS_BAR_TYPES.SHIP_ICON")
@@ -56,7 +56,7 @@
 			(backgroundColor = 0x00FFFFFF)
 			(bind hitTest "!isPositionLocked")
 		)
-		(macro TT_DRAGGABLE _fullKey="'ttaro.advSS.hpBar.position'" _isDragEnabled="!isPositionLocked")
+		(macro TT_DRAGGABLE _fullKey="'ttaro.advShipStatus.hpBar.position'" _isDragEnabled="!isPositionLocked")
 	)
     #
 
@@ -456,15 +456,15 @@
 (def element AdvSS_SpeedControl() layout=true
 	(scope
 		# Mod
-		(macro TT_GET_PREF _varName="'dragLockPref'" _key="'ttaro.advSS.telegraph.disableDragDrop'")
+		(macro TT_GET_PREF _varName="'dragLockPref'" _key="'ttaro.advShipStatus.telegraph.disableDragDrop'")
 		(var isPositionLocked:bool = "null != dragLockPref && null != dragLockPref.value ? dragLockPref.value : true")
-		(macro TT_GET_PREF _varName="'onPlanePref'" _key="'ttaro.advSS.telegraph.enableOnPlane'")
+		(macro TT_GET_PREF _varName="'onPlanePref'" _key="'ttaro.advShipStatus.telegraph.enableOnPlane'")
 		(var isEnabledOnPlane:bool = "null != onPlanePref && null != onPlanePref.value ? onPlanePref.value : true")
 
         (macro STAGE_SIZE)
-		(macro TT_DRAGGABLE_POSITION _fullKey="'ttaro.advSS.telegraph.position'")
+		(macro TT_DRAGGABLE_POSITION _fullKey="'ttaro.advShipStatus.telegraph.position'")
 
-		(macro TT_GET_PREF _varName="'controlScalePref'" _key="'ttaro.advSS.telegraph.scale'")
+		(macro TT_GET_PREF _varName="'controlScalePref'" _key="'ttaro.advShipStatus.telegraph.scale'")
 		(var controlScale:number = "null != controlScalePref && null != controlScalePref.value ? controlScalePref.value : 1")
 		#
 
@@ -506,7 +506,7 @@
 				(backgroundColor = 0x00FFFFFF)
 				(bind hitTest "!isPositionLocked")
 			)
-			(macro TT_DRAGGABLE _fullKey="'ttaro.advSS.telegraph.position'" _isDragEnabled="!isPositionLocked")
+			(macro TT_DRAGGABLE _fullKey="'ttaro.advShipStatus.telegraph.position'" _isDragEnabled="!isPositionLocked")
 		)
 
 		# Main
@@ -524,7 +524,7 @@
 (def element AngleControl () dispatch_size_change=true
 	(scope
 		# Mod
-		(macro TT_GET_PREF _varName="'onPlanePref'" _key="'ttaro.advSS.telegraph.enableOnPlane'")
+		(macro TT_GET_PREF _varName="'onPlanePref'" _key="'ttaro.advShipStatus.telegraph.enableOnPlane'")
 		(var isEnabledOnPlane:bool = "null != onPlanePref && null != onPlanePref.value ? onPlanePref.value : true")
 		#
 		(var avatarEntity:gfx = "$datahub.getSingleEntity(CC.playerAvatar)")
@@ -588,14 +588,14 @@
 (def element AdvSS_CompassContainerInstance () layout=true
 	(scope
 		# Mod
-		(macro TT_GET_PREF _varName="'dragLockPref'" _key="'ttaro.advSS.compass.disableDragDrop'")
+		(macro TT_GET_PREF _varName="'dragLockPref'" _key="'ttaro.advShipStatus.compass.disableDragDrop'")
 		(var isPositionLocked:bool = "null != dragLockPref && null != dragLockPref.value ? dragLockPref.value : true")
 
-		(macro TT_DRAGGABLE_POSITION _fullKey="'ttaro.advSS.compass.position'")
+		(macro TT_DRAGGABLE_POSITION _fullKey="'ttaro.advShipStatus.compass.position'")
 
-		(macro TT_GET_PREF _varName="'compassRosePref'" _key="'ttaro.advSS.compass.rose'")
+		(macro TT_GET_PREF _varName="'compassRosePref'" _key="'ttaro.advShipStatus.compass.rose'")
 		(var isCompassRoseVisible:bool = "null != compassRosePref && null != compassRosePref.value ? compassRosePref.value : true")
-		(macro TT_GET_PREF _varName="'compassScalePref'" _key="'ttaro.advSS.compass.scale'")
+		(macro TT_GET_PREF _varName="'compassScalePref'" _key="'ttaro.advShipStatus.compass.scale'")
 		(var compassScale:number = "null != compassScalePref && null != compassScalePref.value ? compassScalePref.value : 1")
 		#
 
@@ -624,7 +624,7 @@
 			(backgroundColor = 0x00FFFFFF)
 			(bind hitTest "!isPositionLocked")
 		)
-		(macro TT_DRAGGABLE _fullKey="'ttaro.advSS.compass.position'" _isDragEnabled="!isPositionLocked")
+		(macro TT_DRAGGABLE _fullKey="'ttaro.advShipStatus.compass.position'" _isDragEnabled="!isPositionLocked")
 	)
     #
 

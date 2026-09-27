@@ -5,7 +5,7 @@
   "modName": "Adv Ship Status",
   "slug": "adv-ship-status",
   "order": 20,
-  "migrationVersion": 1,
+  "migrationVersion": 2,
   "tree": [
     {
       "kind": "group",
@@ -17,7 +17,7 @@
         {
           "kind": "setting",
           "control": "toggle",
-          "key": "advSS.hpBar.disableDragDrop",
+          "key": "advShipStatus.hpBar.disableDragDrop",
           "label": "IDS_TT_DISABLE_DRAG_DROP",
           "hint": {
             "text": "IDS_TT_HINT_DISABLE_DRAG_DROP"
@@ -27,7 +27,7 @@
         {
           "kind": "setting",
           "control": "slider",
-          "key": "advSS.hpBar.scale",
+          "key": "advShipStatus.hpBar.scale",
           "label": "IDS_TT_UI_SCALE",
           "default": 1,
           "min": 0.5,
@@ -38,7 +38,7 @@
         {
           "kind": "setting",
           "control": "dropdown",
-          "key": "advSS.hpBar.shape",
+          "key": "advShipStatus.hpBar.shape",
           "label": "IDS_TT_HP_BAR_SHAPE",
           "default": 0,
           "options": [
@@ -56,7 +56,7 @@
         {
           "kind": "setting",
           "control": "position",
-          "key": "advSS.hpBar.position",
+          "key": "advShipStatus.hpBar.position",
           "label": "IDS_TT_DRAGDROP_RESET",
           "hint": {
             "text": "IDS_TT_HINT_DRAGDROP_RESET"
@@ -90,7 +90,7 @@
         {
           "kind": "setting",
           "control": "toggle",
-          "key": "advSS.telegraph.disableDragDrop",
+          "key": "advShipStatus.telegraph.disableDragDrop",
           "label": "IDS_TT_DISABLE_DRAG_DROP",
           "hint": {
             "text": "IDS_TT_HINT_DISABLE_DRAG_DROP"
@@ -100,7 +100,7 @@
         {
           "kind": "setting",
           "control": "slider",
-          "key": "advSS.telegraph.scale",
+          "key": "advShipStatus.telegraph.scale",
           "label": "IDS_TT_UI_SCALE",
           "default": 1,
           "min": 0.5,
@@ -111,14 +111,14 @@
         {
           "kind": "setting",
           "control": "toggle",
-          "key": "advSS.telegraph.enableOnPlane",
+          "key": "advShipStatus.telegraph.enableOnPlane",
           "label": "IDS_TT_ENABLE_TELEGRAPH_ON_PLANE",
           "default": true
         },
         {
           "kind": "setting",
           "control": "position",
-          "key": "advSS.telegraph.position",
+          "key": "advShipStatus.telegraph.position",
           "label": "IDS_TT_DRAGDROP_RESET",
           "hint": {
             "text": "IDS_TT_HINT_DRAGDROP_RESET"
@@ -146,7 +146,7 @@
         {
           "kind": "setting",
           "control": "toggle",
-          "key": "advSS.compass.disableDragDrop",
+          "key": "advShipStatus.compass.disableDragDrop",
           "label": "IDS_TT_DISABLE_DRAG_DROP",
           "hint": {
             "text": "IDS_TT_HINT_DISABLE_DRAG_DROP"
@@ -156,7 +156,7 @@
         {
           "kind": "setting",
           "control": "slider",
-          "key": "advSS.compass.scale",
+          "key": "advShipStatus.compass.scale",
           "label": "IDS_TT_UI_SCALE",
           "default": 1,
           "min": 0.5,
@@ -167,14 +167,14 @@
         {
           "kind": "setting",
           "control": "toggle",
-          "key": "advSS.compass.rose",
+          "key": "advShipStatus.compass.rose",
           "label": "IDS_TT_COMPASS_ROSE",
           "default": true
         },
         {
           "kind": "setting",
           "control": "position",
-          "key": "advSS.compass.position",
+          "key": "advShipStatus.compass.position",
           "label": "IDS_TT_DRAGDROP_RESET",
           "hint": {
             "text": "IDS_TT_HINT_DRAGDROP_RESET"

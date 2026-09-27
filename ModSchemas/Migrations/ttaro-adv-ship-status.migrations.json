@@ -113,19 +113,85 @@
           }
         }
       ]
+    },
+    {
+      "version": 2,
+      "description": "key moves (auto) — 12 rename(s)",
+      "ops": [
+        {
+          "op": "rename",
+          "from": "advSS.compass.disableDragDrop",
+          "to": "advShipStatus.compass.disableDragDrop"
+        },
+        {
+          "op": "rename",
+          "from": "advSS.compass.position",
+          "to": "advShipStatus.compass.position"
+        },
+        {
+          "op": "rename",
+          "from": "advSS.compass.rose",
+          "to": "advShipStatus.compass.rose"
+        },
+        {
+          "op": "rename",
+          "from": "advSS.compass.scale",
+          "to": "advShipStatus.compass.scale"
+        },
+        {
+          "op": "rename",
+          "from": "advSS.hpBar.disableDragDrop",
+          "to": "advShipStatus.hpBar.disableDragDrop"
+        },
+        {
+          "op": "rename",
+          "from": "advSS.hpBar.position",
+          "to": "advShipStatus.hpBar.position"
+        },
+        {
+          "op": "rename",
+          "from": "advSS.hpBar.scale",
+          "to": "advShipStatus.hpBar.scale"
+        },
+        {
+          "op": "rename",
+          "from": "advSS.hpBar.shape",
+          "to": "advShipStatus.hpBar.shape"
+        },
+        {
+          "op": "rename",
+          "from": "advSS.telegraph.disableDragDrop",
+          "to": "advShipStatus.telegraph.disableDragDrop"
+        },
+        {
+          "op": "rename",
+          "from": "advSS.telegraph.enableOnPlane",
+          "to": "advShipStatus.telegraph.enableOnPlane"
+        },
+        {
+          "op": "rename",
+          "from": "advSS.telegraph.position",
+          "to": "advShipStatus.telegraph.position"
+        },
+        {
+          "op": "rename",
+          "from": "advSS.telegraph.scale",
+          "to": "advShipStatus.telegraph.scale"
+        }
+      ]
     }
   ],
   "legacyPositions": [
     {
-      "key": "advSS.compass.position",
+      "key": "advShipStatus.compass.position",
       "element": "AdvSSCompass"
     },
     {
-      "key": "advSS.hpBar.position",
+      "key": "advShipStatus.hpBar.position",
       "element": "AdvSSHealthBar"
     },
     {
-      "key": "advSS.telegraph.position",
+      "key": "advShipStatus.telegraph.position",
       "element": "AdvSSTelegraph"
     }
   ]
