@@ -29,6 +29,8 @@
 
 		(var useShipContour:bool = "barType == AdvSS_BAR_TYPES.SHIP_ICON")
 		(var healthRenderer:str = "useShipContour ? 'AdvSS_OwnHealthBar' : 'AdvSS_OwnHealthSimpleBar'")
+
+		(var shieldComponent:gfx = "entity && entity.hasComponent(CC.shield) ? entity.shield : null")
         #
 	)
 
@@ -63,7 +65,7 @@
 	(block
 		# Mod
 		(style
-			(width = 220px) # 
+			(width = "HEALTH_PANEL_WIDTH")
 			(bind scaleX "barScale")
 			(bind scaleY "barScale")
 			(hitTest = false)
@@ -98,17 +100,183 @@
 
 		(hblock
 			(style
-				(marginLeft = -2px)
+				(width = "HEALTH_PANEL_WIDTH")
 				(align = "middle")
 			)
 			(element ShipLabel _shipInfoEntity="shipInfo"
 				(style (minWidth = 135))
 			)
+
+			(block (style (width = 100%)))
+
 			(block
 				(style
 					(align = "right")
 				)
 				(element ShipHealthLabel _shipEntity="entity")
+			)
+		)
+
+		# Mod
+		# Vanilla's shield bar is a fixed-position sibling of the HP panel; drawn here so it follows the drag.
+		(controller $Instance renderer='AdvSS_OwnShipShieldContainer'
+			(bind enabled "shieldComponent != null")
+			(args _shieldComponent="shieldComponent")
+		)
+		#
+	)
+)
+
+# Mod
+# Replaced by AdvSS_OwnShipShieldContainer inside our HP panel.
+# Known gap: in modes that show EventShipHealthContainer instead (portal, battle royale,
+# diplomacy) this leaves no shield bar. If shields ever appear there, render the vanilla body
+# here only when the event container is visible (same three conditions as its parent).
+(def element OwnShipShieldContainer ())
+#
+
+# battle\own_ship_health.unbound
+(def element AdvSS_OwnShipShieldContainer(_shieldComponent:gfx)
+	(scope
+		(var value:number = "_shieldComponent.value" (event "_shieldComponent.evValueChanged"))
+		(var maxValue:number = "_shieldComponent.max" (event "_shieldComponent.evMaxChanged"))
+		(var healthPercent:number = "maxValue ? value / maxValue : 0")
+
+		(var displayedHealth:number = "value" watch=false)
+		(var healthDelta:number = "_shieldComponent.delta" (event "_shieldComponent.evDeltaChanged"))
+
+		(controller $Animation
+			(bindcall play  duration = "HEALTH_ANI_MIN"
+							action="kill"
+							watch = false
+							easing="Easing.quad_in"
+							to = "{ displayedHealth: value }"
+							(event "_shieldComponent.evValueChanged")
+			)
+		)
+
+		(var resultHealthWidth:number = "100% * healthPercent")
+		(var currentHealthWidth:number = "resultHealthWidth" watch=false)
+
+		(controller $Animation
+			(bindcall play
+							delay = "healthDelta >=0 ? HEALTH_REGEN_ANI_DELAY : HEALTH_ANI_NO_DELAY"
+							duration = "healthDelta >=0 ? HEALTH_REGEN_ANI_MAX : HEALTH_ANI_MIN"
+							action="kill"
+							watch = false
+							easing="Easing.quad_in"
+							from = "{ currentHealthWidth: currentHealthWidth }"
+							to = "{ currentHealthWidth: resultHealthWidth }"
+							(event "_shieldComponent.evValueChanged")
+							(event "_shieldComponent.evMaxChanged")
+			)
+		)
+
+		(var currentDamageWidth:number = "resultHealthWidth" watch=false)
+
+		(controller $Animation
+			(bindcall play
+							delay = "healthDelta >=0 ? HEALTH_ANI_NO_DELAY : HEALTH_ANI_DELAY"
+							duration = "healthDelta >=0 ? HEALTH_REGEN_ANI_DELAY : min(HEALTH_ANI_MAX, max(HEALTH_ANI_MIN, abs(healthDelta/maxValue)*10))"
+							action="kill"
+							watch = false
+							easing="Easing.quad_in"
+							from = "{ currentDamageWidth: currentDamageWidth }"
+							to = "{ currentDamageWidth: resultHealthWidth }"
+							(event "_shieldComponent.evValueChanged")
+							(event "_shieldComponent.evMaxChanged")
+			)
+		)
+	)
+
+	(style
+		(width = "HEALTH_PANEL_WIDTH")
+		(height = 71)
+		(position = "absolute")
+		# Mod
+		# Vanilla sits at bottom 245 / left 11 on screen, the HP panel at bottom 224 / left 11.
+		(bottom = 21)
+		(left = 0)
+		#
+	)
+
+	(block
+		(style
+			(position = "absolute")
+			(width = "HEALTH_PANEL_WIDTH")
+			(height = 21)
+			(flow = "horizontal")
+			(align = "right")
+		)
+		
+		(block
+			(style (width = 100%))
+		)
+
+		(tf
+			(class $TextHealthBold)
+			(class $FontEnableReadability)
+			(bind class "healthPercent > 0.8 ? '$FontColorBuoyancy' : healthPercent > 0.3 ? '$FontColorBlueish' : '$FontColorStrongBlueish'")
+			(bind text "formatSeparator(formatFloatingPoint(displayedHealth, 0))")
+		)
+
+		(tf
+			(style
+				(marginLeft = "-XS")
+			)
+			(alpha = 0.7)
+			(class $TextHealth)
+			(class $FontEnableReadability)
+			(bind text "'/' + formatSeparator(maxValue)")
+		)
+	)
+
+	(block
+		(style
+			(width = "BAR_IMAGE_WIDTH")
+			(height = "BAR_IMAGE_HEIGHT")
+			(position = "absolute")
+			(top = 21)
+			(left = 20)
+		)
+
+		(block
+			(class $FullsizeAbsolute)
+			(style
+				(backgroundImage = 'url:../battle_hud/own_ship_health/shield_track.png')
+				(backgroundSize = "fill")
+			)
+		)
+
+		(block
+			(class $FullsizeAbsolute)
+			(style
+				(backgroundImage = 'url:../battle_hud/own_ship_health/shield_damage.png')
+				(backgroundSize = "autosize")
+			)
+			(block
+				(class $FullsizeAbsolute)
+				(style
+					(bind width "currentDamageWidth")
+				)
+				(style (backgroundColor = 0x11000000))
+				(isMask = true)
+			)
+		)
+
+		(block
+			(class $FullsizeAbsolute)
+			(style
+				(backgroundImage = 'url:../battle_hud/own_ship_health/shield_bar.png')
+				(backgroundSize = "autosize")
+			)
+			(block
+				(class $FullsizeAbsolute)
+				(style
+					(bind width "currentHealthWidth")
+				)
+				(style (backgroundColor = 0x11000000))
+				(isMask = true)
 			)
 		)
 	)
